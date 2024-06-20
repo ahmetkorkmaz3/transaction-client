@@ -42,7 +42,7 @@ export default function Home() {
   }, [dateFilter, minAmount, maxAmount]);
 
   const dateFilterOptions = [
-    { value: DATE_FILTER.ALL, label: 'All' },
+    { value: DATE_FILTER.ALL, label: 'Tümü' },
     { value: DATE_FILTER.TODAY, label: 'Bugün' },
     { value: DATE_FILTER.YESTERDAY, label: 'Dün' },
     { value: DATE_FILTER.LAST_7_DAYS, label: 'Son 7 Gün' },
