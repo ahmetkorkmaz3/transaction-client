@@ -10,11 +10,21 @@ export default function Home() {
   const [transactions, setTransactions] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [dateFilter, setDateFilter] = useState('today');
+  const [dateFilter, setDateFilter] = useState('all');
 
-  const fetchData = async ({ filter_date }) => {
+  const [minValue, setMinValue] = useState('');
+  const [maxValue, setMaxValue] = useState('');
+
+  const [minAmount, setMinAmount] = useState(null);
+  const [maxAmount, setMaxAmount] = useState(null);
+
+  const fetchData = async () => {
     try {
-      const res = await axios.get(`/transaction?date=${filter_date}`);
+      let queryString = dateFilter ? `date=${dateFilter}` : '';
+      queryString += minAmount ? `&min_amount=${minAmount}` : '';
+      queryString += maxAmount ? `&max_amount=${maxAmount}` : '';
+
+      const res = await axios.get(`/transaction?${queryString}`);
 
       const data = await res.data.data;
       setTransactions(data);
@@ -26,10 +36,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchData({
-       filter_date: dateFilter
-    }).then();
-  }, [dateFilter]);
+    fetchData().then();
+  }, [dateFilter, minAmount, maxAmount]);
 
   const dateFilterOptions = [
     { value: 'all', label: 'All' },
@@ -52,13 +60,47 @@ export default function Home() {
     setDateFilter(e.target.value);
   }
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setMinAmount(minValue);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [minValue]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setMaxAmount(maxValue);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [maxValue]);
+
   return (
     <main className="flex justify-center items-center">
       <div>
         <h1 className="text-center py-4 font-bold text-2xl">History</h1>
 
-        <div className="flex">
-          <SelectFilter icon={<FaCalendar />} options={dateFilterOptions} onChangeHandler={onChangeHandler} selectedValue={dateFilter} />
+        <div className="flex gap-10">
+          <SelectFilter icon={<FaCalendar/>} options={dateFilterOptions} onChangeHandler={onChangeHandler}
+                        selectedValue={dateFilter}/>
+
+          <div className="flex gap-2">
+            <input type="text"
+                   placeholder="min amount"
+                   value={minValue}
+                   onChange={(e) => setMinValue(e.target.value)}
+                   className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
+            <input type="text"
+                   value={maxValue}
+                   onChange={(e) => setMaxValue(e.target.value)}
+                   placeholder="max amount"
+                   className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
+          </div>
         </div>
 
         {loading && <p>Loading...</p>}
