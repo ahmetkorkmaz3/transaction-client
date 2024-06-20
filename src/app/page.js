@@ -89,24 +89,23 @@ export default function Home() {
       <div>
         <h1 className="text-center py-4 font-bold text-2xl">History</h1>
 
-        <div className="flex gap-10">
-          <div>
-            <SelectFilter icon={<FaCalendar/>} options={DATE_FILTER_OPTIONS} onChangeHandler={dateFilterOnChangeHandler}
-                          selectedValue={dateFilter}/>
+        <div className="flex flex-col gap-4">
+          <SelectFilter icon={<FaCalendar/>} options={DATE_FILTER_OPTIONS} onChangeHandler={dateFilterOnChangeHandler}
+                        selectedValue={dateFilter}/>
 
-            <div className="flex gap-2">
-              <input type="text"
-                     placeholder="min amount"
-                     value={minValue}
-                     onChange={(e) => setMinValue(e.target.value)}
-                     className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
-              <input type="text"
-                     value={maxValue}
-                     onChange={(e) => setMaxValue(e.target.value)}
-                     placeholder="max amount"
-                     className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
-            </div>
+          <div className="flex gap-2">
+            <input type="text"
+                   placeholder="min amount"
+                   value={minValue}
+                   onChange={(e) => setMinValue(e.target.value)}
+                   className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
+            <input type="text"
+                   value={maxValue}
+                   onChange={(e) => setMaxValue(e.target.value)}
+                   placeholder="max amount"
+                   className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
           </div>
+
           <div>
             <Multiselect options={TYPE_FILTER_OPTIONS} selectedValues={typeSelectedValues}
                          onSelect={typeFilterOnChangeHandler} onRemove={typeFilterOnChangeHandler} displayValue="cat" />

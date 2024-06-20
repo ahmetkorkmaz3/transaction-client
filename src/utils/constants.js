@@ -18,7 +18,7 @@ export const DATE_FILTER_OPTIONS = [
 
 export const TYPE_FILTER_OPTIONS = [
   { key: "spending", cat: "Harcama" },
-  { key: "charge", cat: "Charge" },
-  { key: "point", cat: "Puan Kullanımı" },
-  { key: "withdrawal", cat: "withdrawal" },
+  { key: "charge", cat: "Masraf" },
+  { key: "point", cat: "Puan" },
+  { key: "withdrawal", cat: "Para Çekme" },
 ]
