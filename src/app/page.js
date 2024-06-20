@@ -10,7 +10,7 @@ export default function Home() {
   const [transactions, setTransactions] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [dateFilter, setDateFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('today');
 
   const [minValue, setMinValue] = useState('');
   const [maxValue, setMaxValue] = useState('');
