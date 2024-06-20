@@ -1,16 +1,18 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import axios from '../utils/axios';
+import axios from '@/utils/axios';
 
 import { FaCalendar } from 'react-icons/fa'
+
 import SelectFilter from "@/components/SelectFilter";
+import { DATE_FILTER } from "@/utils/constants";
 
 export default function Home() {
   const [transactions, setTransactions] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [dateFilter, setDateFilter] = useState('today');
+  const [dateFilter, setDateFilter] = useState(DATE_FILTER.TODAY);
 
   const [minValue, setMinValue] = useState('');
   const [maxValue, setMaxValue] = useState('');
@@ -40,12 +42,12 @@ export default function Home() {
   }, [dateFilter, minAmount, maxAmount]);
 
   const dateFilterOptions = [
-    { value: 'all', label: 'All' },
-    { value: 'today', label: 'Bugün' },
-    { value: 'yesterday', label: 'Dün' },
-    { value: 'last_7_days', label: 'Son 7 Gün' },
-    { value: 'last_30_days', label: 'Son 30 Gün' },
-    { value: 'last_1_years', label: 'Son 1 Yıl' },
+    { value: DATE_FILTER.ALL, label: 'All' },
+    { value: DATE_FILTER.TODAY, label: 'Bugün' },
+    { value: DATE_FILTER.YESTERDAY, label: 'Dün' },
+    { value: DATE_FILTER.LAST_7_DAYS, label: 'Son 7 Gün' },
+    { value: DATE_FILTER.LAST_30_DAYS, label: 'Son 30 Gün' },
+    { value: DATE_FILTER.LAST_1_YEARS, label: 'Son 1 Yıl' },
   ];
 
   const onChangeHandler = (e) => {
