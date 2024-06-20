@@ -20,24 +20,24 @@ export default function Home() {
   const [minAmount, setMinAmount] = useState(null);
   const [maxAmount, setMaxAmount] = useState(null);
 
-  const fetchData = async () => {
-    try {
-      let queryString = dateFilter ? `date=${dateFilter}` : '';
-      queryString += minAmount ? `&min_amount=${minAmount}` : '';
-      queryString += maxAmount ? `&max_amount=${maxAmount}` : '';
-
-      const res = await axios.get(`/transaction?${queryString}`);
-
-      const data = await res.data.data;
-      setTransactions(data);
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let queryString = dateFilter ? `date=${dateFilter}` : '';
+        queryString += minAmount ? `&min_amount=${minAmount}` : '';
+        queryString += maxAmount ? `&max_amount=${maxAmount}` : '';
+
+        const res = await axios.get(`/transaction?${queryString}`);
+
+        const data = await res.data.data;
+        setTransactions(data);
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false);
+      }
+    }
+
     fetchData().then();
   }, [dateFilter, minAmount, maxAmount]);
 
