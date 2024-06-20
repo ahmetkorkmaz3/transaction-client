@@ -1,43 +1,76 @@
 'use client'
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+
+import { FaCalendar } from 'react-icons/fa'
+import SelectFilter from "@/components/SelectFilter";
 
 export default function Home() {
   const [transactions, setTransactions] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [dateFilter, setDateFilter] = useState('today');
+
+  const fetchData = async ({ filter_date }) => {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/v1/transaction?date=${filter_date}`);
+
+      const data = await res.data.data;
+      setTransactions(data);
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get('http://localhost:8000/api/v1/transaction');
+    fetchData({
+       filter_date: dateFilter
+    }).then();
+  }, [dateFilter]);
 
-        const data = await res.data.data;
-        setTransactions(data);
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setLoading(false);
-      }
-    };
+  const dateFilterOptions = [
+    { value: 'all', label: 'All' },
+    { value: 'today', label: 'Bugün' },
+    { value: 'yesterday', label: 'Dün' },
+    { value: 'last_7_days', label: 'Son 7 Gün' },
+    { value: 'last_30_days', label: 'Son 30 Gün' },
+    { value: 'last_1_years', label: 'Son 1 Yıl' },
+  ];
 
-    fetchData().then();
-  }, []);
+  const onChangeHandler = (e) => {
+    if (e.target.value === dateFilter) {
+      return;
+    }
+
+    if (!dateFilterOptions.map(option => option.value).includes(e.target.value)) {
+      return;
+    }
+
+    setDateFilter(e.target.value);
+  }
 
   return (
     <main className="flex justify-center items-center">
       <div>
-        <h1>History</h1>
+        <h1 className="text-center py-4 font-bold text-2xl">History</h1>
+
+        <div className="flex">
+          <SelectFilter icon={<FaCalendar />} options={dateFilterOptions} onChangeHandler={onChangeHandler} selectedValue={dateFilter} />
+        </div>
+
         {loading && <p>Loading...</p>}
         <ul role="list" className="divide-y divide-gray-200">
           {transactions && transactions.map((transaction) => (
             <li className="grid grid-cols-5 items-center py-5" key={transaction.id}>
               <div className="flex items-center gap-2 text-black col-start-1">
                 <div className="flex justify-center items-center rounded-full bg-gray-300 w-10 h-10 font-bold">
-                  {new Date(transaction.created_at).toLocaleString('default', { day: 'numeric' })}
+                  {new Date(transaction.created_at).toLocaleString('default', {day: 'numeric'})}
                 </div>
                 <div className="text-gray-400 text-sm">
-                  {new Date(transaction.created_at).toLocaleString('default', { month: 'short', year: 'numeric' })}
+                  {new Date(transaction.created_at).toLocaleString('default', {month: 'short', year: 'numeric'})}
                 </div>
               </div>
 
