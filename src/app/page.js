@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios from '../utils/axios';
 
 import { FaCalendar } from 'react-icons/fa'
 import SelectFilter from "@/components/SelectFilter";
@@ -14,7 +14,7 @@ export default function Home() {
 
   const fetchData = async ({ filter_date }) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/v1/transaction?date=${filter_date}`);
+      const res = await axios.get(`/transaction?date=${filter_date}`);
 
       const data = await res.data.data;
       setTransactions(data);
