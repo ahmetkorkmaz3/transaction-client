@@ -6,7 +6,8 @@ import axios from '@/utils/axios';
 import { FaCalendar } from 'react-icons/fa'
 
 import SelectFilter from "@/components/SelectFilter";
-import { DATE_FILTER } from "@/utils/constants";
+import { DATE_FILTER, DATE_FILTER_OPTIONS, TYPE_FILTER_OPTIONS } from "@/utils/constants";
+import { Multiselect } from "multiselect-react-dropdown";
 
 export default function Home() {
   const [transactions, setTransactions] = useState(null);
@@ -20,12 +21,18 @@ export default function Home() {
   const [minAmount, setMinAmount] = useState(null);
   const [maxAmount, setMaxAmount] = useState(null);
 
+  const [typeSelectedValues, setTypeSelectedValues] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         let queryString = dateFilter ? `date=${dateFilter}` : '';
         queryString += minAmount ? `&min_amount=${minAmount}` : '';
         queryString += maxAmount ? `&max_amount=${maxAmount}` : '';
+
+        if (typeSelectedValues.length !== 0) {
+          queryString += `&type=${typeSelectedValues.map(type => type.key).join(',')}`
+        }
 
         const res = await axios.get(`/transaction?${queryString}`);
 
@@ -39,27 +46,22 @@ export default function Home() {
     }
 
     fetchData().then();
-  }, [dateFilter, minAmount, maxAmount]);
+  }, [dateFilter, minAmount, maxAmount, typeSelectedValues]);
 
-  const dateFilterOptions = [
-    { value: DATE_FILTER.ALL, label: 'Tümü' },
-    { value: DATE_FILTER.TODAY, label: 'Bugün' },
-    { value: DATE_FILTER.YESTERDAY, label: 'Dün' },
-    { value: DATE_FILTER.LAST_7_DAYS, label: 'Son 7 Gün' },
-    { value: DATE_FILTER.LAST_30_DAYS, label: 'Son 30 Gün' },
-    { value: DATE_FILTER.LAST_1_YEARS, label: 'Son 1 Yıl' },
-  ];
-
-  const onChangeHandler = (e) => {
+  const dateFilterOnChangeHandler = (e) => {
     if (e.target.value === dateFilter) {
       return;
     }
 
-    if (!dateFilterOptions.map(option => option.value).includes(e.target.value)) {
+    if (!DATE_FILTER_OPTIONS.map(option => option.value).includes(e.target.value)) {
       return;
     }
 
     setDateFilter(e.target.value);
+  }
+
+  const typeFilterOnChangeHandler = (selectedList, selectedItem) => {
+    setTypeSelectedValues(selectedList)
   }
 
   useEffect(() => {
@@ -88,24 +90,30 @@ export default function Home() {
         <h1 className="text-center py-4 font-bold text-2xl">History</h1>
 
         <div className="flex gap-10">
-          <SelectFilter icon={<FaCalendar/>} options={dateFilterOptions} onChangeHandler={onChangeHandler}
-                        selectedValue={dateFilter}/>
+          <div>
+            <SelectFilter icon={<FaCalendar/>} options={DATE_FILTER_OPTIONS} onChangeHandler={dateFilterOnChangeHandler}
+                          selectedValue={dateFilter}/>
 
-          <div className="flex gap-2">
-            <input type="text"
-                   placeholder="min amount"
-                   value={minValue}
-                   onChange={(e) => setMinValue(e.target.value)}
-                   className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
-            <input type="text"
-                   value={maxValue}
-                   onChange={(e) => setMaxValue(e.target.value)}
-                   placeholder="max amount"
-                   className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
+            <div className="flex gap-2">
+              <input type="text"
+                     placeholder="min amount"
+                     value={minValue}
+                     onChange={(e) => setMinValue(e.target.value)}
+                     className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
+              <input type="text"
+                     value={maxValue}
+                     onChange={(e) => setMaxValue(e.target.value)}
+                     placeholder="max amount"
+                     className="form-input w-full placeholder-gray-400 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm p-2"/>
+            </div>
+          </div>
+          <div>
+            <Multiselect options={TYPE_FILTER_OPTIONS} selectedValues={typeSelectedValues}
+                         onSelect={typeFilterOnChangeHandler} onRemove={typeFilterOnChangeHandler} displayValue="cat" />
           </div>
         </div>
 
-        {loading && <p>Loading...</p>}
+        {loading && <p>Yükleniyor...</p>}
         <ul role="list" className="divide-y divide-gray-200">
           {transactions && transactions.map((transaction) => (
             <li className="grid grid-cols-5 items-center py-5" key={transaction.id}>
