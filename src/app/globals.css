@@ -12,6 +12,8 @@
 body {
   color: rgb(var(--black));
   background: rgb(var(--white));
+
+  padding: 10px;
 }
 
 @layer utilities {
