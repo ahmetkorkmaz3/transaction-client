@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from "react";
 import axios from '@/utils/axios';
 
-import { FaCalendar } from 'react-icons/fa'
+import { FaArrowRight, FaCalendar } from 'react-icons/fa'
 
 import SelectFilter from "@/components/SelectFilter";
 import { DATE_FILTER, DATE_FILTER_OPTIONS, TYPE_FILTER_OPTIONS } from "@/utils/constants";
 import { Multiselect } from "multiselect-react-dropdown";
+import Link from "next/link";
 
 export default function Home() {
   const [transactions, setTransactions] = useState(null);
@@ -115,7 +116,7 @@ export default function Home() {
         {loading && <p>Yükleniyor...</p>}
         <ul role="list" className="divide-y divide-gray-200">
           {transactions && transactions.map((transaction) => (
-            <li className="grid grid-cols-5 items-center py-5" key={transaction.id}>
+            <li className="grid grid-cols-6 items-center py-5" key={transaction.id}>
               <div className="flex items-center gap-2 text-black col-start-1">
                 <div className="flex justify-center items-center rounded-full bg-gray-300 w-10 h-10 font-bold">
                   {new Date(transaction.created_at).toLocaleString('default', {day: 'numeric'})}
@@ -139,6 +140,10 @@ export default function Home() {
               <div className={transaction.type === 'spending' ? 'text-red-600 col-start-5' : 'text-green-600 col-start-5'}>
                 {transaction.type === 'spending' ? '-' : '+'}
                 {transaction.amount.asString}
+
+                <Link href={transaction.id}>
+                  <FaArrowRight />
+                </Link>
               </div>
             </li>
           ))}
