@@ -86,7 +86,7 @@ export default function Home() {
   }, [maxValue]);
 
   return (
-    <main className="flex justify-center items-center">
+    <main className="container">
       <div>
         <h1 className="text-center py-4 font-bold text-2xl">History</h1>
 
@@ -114,9 +114,10 @@ export default function Home() {
         </div>
 
         {loading && <p>Yükleniyor...</p>}
+
         <ul role="list" className="divide-y divide-gray-200">
           {transactions && transactions.map((transaction) => (
-            <li className="grid grid-cols-6 items-center py-5" key={transaction.id}>
+            <li className="grid grid-cols-5 items-center py-5" key={transaction.id}>
               <div className="flex items-center gap-2 text-black col-start-1">
                 <div className="flex justify-center items-center rounded-full bg-gray-300 w-10 h-10 font-bold">
                   {new Date(transaction.created_at).toLocaleString('default', {day: 'numeric'})}
@@ -137,7 +138,7 @@ export default function Home() {
                 </div>
               )}
 
-              <div className={transaction.type === 'spending' ? 'text-red-600 col-start-5' : 'text-green-600 col-start-5'}>
+              <div className={transaction.type === 'spending' ? 'flex items-center gap-2 text-red-600 col-start-5' : 'flex items-center gap-2 text-green-600 col-start-5'}>
                 {transaction.type === 'spending' ? '-' : '+'}
                 {transaction.amount.asString}
 
