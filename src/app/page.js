@@ -138,9 +138,10 @@ export default function Home() {
                 </div>
               )}
 
-              <div className={transaction.type === 'spending' ? 'flex items-center gap-2 text-red-600 col-start-5' : 'flex items-center gap-2 text-green-600 col-start-5'}>
-                {transaction.type === 'spending' ? '-' : '+'}
-                {transaction.amount.asString}
+              <div className={"flex items-center justify-end  gap-2 col-start-5 " + (transaction.type === 'spending' ? 'text-red-600' : 'text-green-600 ')}>
+                {transaction.amount.asInt > 0 && (transaction.type === 'spending' ? '-' : '+')}
+                {transaction.amount.asInt > 0 && transaction.amount.asString}
+                {transaction.type === 'point' && ("+" + transaction.point.asString)}
 
                 <Link href={transaction.id}>
                   <FaArrowRight />
